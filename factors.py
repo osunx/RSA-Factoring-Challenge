@@ -13,7 +13,7 @@ def is_prime(num):
 def factorize(num):
     for i in range(2, num // 2 + 1):
         if num % i == 0:
-            print(f"{num}={num // i}*{i}")
+            print(f"{num}={i}*{num // i}")
             return
 
 def main():
