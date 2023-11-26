@@ -1,36 +1,37 @@
 import sys
 
-def factorize_rsa_number(n):
-    factors = []
-    divisor = 2
+def is_prime(num):
+    if num < 2:
+        return False
+    for i in range(2, int(num**0.5) + 1):
+        if num % i == 0:
+            return False
+    return True
 
-    while n > 1:
-        while n % divisor == 0:
-            factors.append(divisor)
-            n //= divisor
-        divisor += 1
-
-    return factors
-
-def format_output(n, factors):
-    return f"{n}={'*'.join(map(str, factors))}"
-
-def process_file(file_path):
-    with open(file_path, 'r') as file:
-        rsa_numbers = [int(line.strip()) for line in file.readlines()]
-
-    for n in rsa_numbers:
-        factors = factorize_rsa_number(n)
-        output = format_output(n, factors)
-        print(output)
+def factorize(num):
+    for i in range(2, num // 2 + 1):
+        if num % i == 0 and is_prime(i) and is_prime(num // i):
+            print(f"{num}={i}*{num // i}")
+            return
 
 def main():
     if len(sys.argv) != 2:
-        print("Usage: python rsa.py <file_path>")
+        print("Usage: {} <file>".format(sys.argv[0]), file=sys.stderr)
         sys.exit(1)
 
-    file_path = sys.argv[1]
-    process_file(file_path)
+    try:
+        with open(sys.argv[1], "r") as file:
+            num = int(file.readline())
+            if is_prime(num):
+                print(f"{num} is already a prime number.")
+            else:
+                factorize(num)
+    except FileNotFoundError:
+        print("Error: File not found.")
+        sys.exit(1)
+    except ValueError:
+        print("Error: Invalid input in the file.")
+        sys.exit(1)
 
 if __name__ == "__main__":
     main()
